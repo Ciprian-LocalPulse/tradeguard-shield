@@ -1,6 +1,11 @@
 # TradeGuard Shield
 
+<p align="center">
+  <img src="assets/TRADEGUARD-SHIELD-BANNER.png" alt="TradeGuard Shield Banner" width="100%">
+</p>
+
 Real-time risk intelligence for trading websites: an API, browser extension, and dashboard that help users spot high-risk brokers, phishing clones, and suspicious trading platforms before they deposit money.
+
 
 ## Author and Copyright
 
