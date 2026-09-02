@@ -6,7 +6,7 @@ Docker Life defines how TradeGuard Shield should be built, run, tested, and prom
 
 ```bash
 pnpm install
-docker compose -f infra/docker-compose.yml up --build
+docker compose -f infra/compose/dev.yml up --build
 ```
 
 Services:

@@ -8,6 +8,7 @@ export interface RiskReason {
   detail: string;
   source: string;
   evidenceUrl?: string;
+  observedAt?: string;
 }
 
 export interface DomainSignals {
@@ -30,6 +31,7 @@ export interface CheckResponse {
   reasons: RiskReason[];
   checkedAt: string;
   cacheTtlSeconds: number;
+  requestId?: string;
 }
 
 export interface UserReport {

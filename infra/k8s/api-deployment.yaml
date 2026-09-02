@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tradeguard-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tradeguard-api
+  template:
+    metadata:
+      labels:
+        app: tradeguard-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/ciprian-localpulse/tradeguard-shield-api:0.1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: API_PORT
+              value: "8080"
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health/ready
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health/live
+              port: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true

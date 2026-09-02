@@ -1,0 +1,7 @@
+flowchart LR
+  User[Retail trader] --> Extension[Browser Extension]
+  Extension --> API[Risk Intelligence API]
+  API --> Sources[Public Data Sources]
+  API --> Score[Explainable Scoring]
+  Score --> Extension
+  API --> Dashboard[Analyst Dashboard]

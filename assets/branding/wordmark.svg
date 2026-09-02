@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="220" viewBox="0 0 960 220" role="img" aria-labelledby="title">
+  <title id="title">TradeGuard Shield wordmark</title>
+  <rect width="960" height="220" rx="24" fill="#ffffff"/>
+  <path d="M110 30 170 55v45c0 39-24 68-60 82-36-14-60-43-60-82V55l60-25Z" fill="#1f6feb"/>
+  <path d="m77 96 25 25 45-50" fill="none" stroke="#16a34a" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="220" y="104" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700" fill="#101828">TradeGuard</text>
+  <text x="220" y="158" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="500" fill="#475467">Shield</text>
+</svg>

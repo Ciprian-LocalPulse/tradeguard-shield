@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
@@ -8,11 +9,21 @@ const metrics = [
 ];
 
 function App() {
+  const [status, setStatus] = useState<"loading" | "online" | "offline">("loading");
+
+  useEffect(() => {
+    const apiBaseUrl = import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+    fetch(`${apiBaseUrl}/api/v1/health/ready`)
+      .then((response) => setStatus(response.ok ? "online" : "offline"))
+      .catch(() => setStatus("offline"));
+  }, []);
+
   return (
     <main>
       <header>
         <h1>TradeGuard Shield</h1>
         <p>Operational dashboard for trading-site risk intelligence.</p>
+        <span className={`status ${status}`}>API {status}</span>
       </header>
       <section className="metrics">
         {metrics.map((metric) => (
@@ -42,6 +53,7 @@ function App() {
             </tr>
           </tbody>
         </table>
+        <p className="empty-note">This dashboard is ready for authenticated production data once persistence is enabled.</p>
       </section>
     </main>
   );

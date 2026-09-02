@@ -1,4 +1,5 @@
 import type { BadgeColor, DomainSignals, RiskLevel, RiskReason } from "./types.js";
+import { scorePolicy } from "./score-policy.js";
 
 export interface ScoreResult {
   score: number;
@@ -8,8 +9,8 @@ export interface ScoreResult {
 }
 
 export function riskLevelForScore(score: number): RiskLevel {
-  if (score <= 30) return "high";
-  if (score <= 60) return "medium";
+  if (score <= scorePolicy.thresholds.highMax) return "high";
+  if (score <= scorePolicy.thresholds.mediumMax) return "medium";
   return "low";
 }
 
@@ -23,65 +24,44 @@ export function calculateScore(signals: DomainSignals): ScoreResult {
   let score = 100;
   const reasons: RiskReason[] = [];
 
-  const add = (points: number, reason: RiskReason) => {
-    score -= points;
-    reasons.push(reason);
+  const addPolicyReason = (code: keyof typeof scorePolicy.penalties, overrides: Partial<RiskReason> = {}) => {
+    const penalty = scorePolicy.penalties[code];
+    score -= penalty.points;
+    reasons.push({
+      code,
+      severity: penalty.severity,
+      detail: penalty.detail,
+      source: penalty.source,
+      ...overrides
+    });
   };
 
   if (signals.domainAgeDays !== undefined && signals.domainAgeDays < 30) {
-    add(30, {
-      code: "DOMAIN_VERY_YOUNG",
-      severity: "critical",
-      detail: "Domain was registered less than 30 days ago.",
-      source: "rdap"
-    });
+    addPolicyReason("DOMAIN_VERY_YOUNG");
   } else if (signals.domainAgeDays !== undefined && signals.domainAgeDays < 180) {
-    add(15, {
-      code: "DOMAIN_YOUNG",
-      severity: "warning",
-      detail: "Domain age is below the configured trust threshold.",
-      source: "rdap"
-    });
+    addPolicyReason("DOMAIN_YOUNG");
   }
 
   if (signals.usesWhoisPrivacy) {
-    add(8, {
-      code: "WHOIS_PRIVACY",
-      severity: "info",
-      detail: "Registration metadata appears privacy-protected.",
-      source: "rdap"
-    });
+    addPolicyReason("WHOIS_PRIVACY");
   }
 
   if (signals.hasValidTls === false) {
-    add(18, {
-      code: "TLS_INVALID",
-      severity: "warning",
-      detail: "TLS certificate could not be validated.",
-      source: "certificate-transparency"
-    });
+    addPolicyReason("TLS_INVALID");
   }
 
   if (signals.listedInThreatFeed) {
-    add(55, {
-      code: "THREAT_FEED_MATCH",
-      severity: "critical",
-      detail: "Domain appears in a configured phishing or scam feed.",
-      source: "threat-feed"
-    });
+    addPolicyReason("THREAT_FEED_MATCH");
   }
 
   if (!signals.regulatorMatches?.length) {
-    add(20, {
-      code: "NO_REGULATOR_MATCH",
-      severity: "warning",
-      detail: "No matching financial license was found in configured regulators.",
-      source: "financial-registry"
-    });
+    addPolicyReason("NO_REGULATOR_MATCH");
   }
 
   if (signals.suspiciousClaims?.length) {
-    add(Math.min(20, signals.suspiciousClaims.length * 6), {
+    const points = Math.min(20, signals.suspiciousClaims.length * 6);
+    score -= points;
+    reasons.push({
       code: "SUSPICIOUS_MARKETING_CLAIMS",
       severity: "warning",
       detail: `Detected risky trading claims: ${signals.suspiciousClaims.join(", ")}.`,
@@ -90,21 +70,11 @@ export function calculateScore(signals: DomainSignals): ScoreResult {
   }
 
   if (signals.negativeReviewRatio !== undefined && signals.negativeReviewRatio > 0.65) {
-    add(12, {
-      code: "NEGATIVE_REVIEW_PATTERN",
-      severity: "warning",
-      detail: "Negative review ratio is above the configured threshold.",
-      source: "reviews"
-    });
+    addPolicyReason("NEGATIVE_REVIEW_PATTERN");
   }
 
   if (signals.suddenSocialSpike) {
-    add(10, {
-      code: "SUDDEN_SOCIAL_SPIKE",
-      severity: "warning",
-      detail: "Mentions increased abruptly across monitored social sources.",
-      source: "social-media"
-    });
+    addPolicyReason("SUDDEN_SOCIAL_SPIKE");
   }
 
   score = Math.max(0, Math.min(100, score));

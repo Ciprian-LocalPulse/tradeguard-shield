@@ -15,7 +15,7 @@ export const checkCache = {
   set(domain: string, value: CheckResponse) {
     cache.set(domain, {
       value,
-      expiresAt: Date.now() + config.cacheTtlSeconds * 1000
+      expiresAt: Date.now() + config.CHECK_CACHE_TTL_SECONDS * 1000
     });
   }
 };

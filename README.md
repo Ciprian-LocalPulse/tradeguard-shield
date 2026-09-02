@@ -18,6 +18,7 @@ The project is designed around explainable signals rather than unsupported accus
 - Public API for URL checks, reports, feedback, and aggregate statistics.
 - Dashboard for analysts and operators to review recent checks and reports.
 - Shared scoring package with transparent rule weights.
+- Production-oriented config, security, logging, collector, worker, cache, and persistence boundaries.
 - Docker Compose development environment.
 - CI workflows for API, shared package, dashboard, and extension checks.
 
@@ -30,7 +31,15 @@ tradeguard-shield/
     dashboard/           React dashboard
     extension/           Manifest V3 browser extension
   packages/
+    config/              Environment validation
+    logger/              Redaction-safe log helpers
+    security/            URL safety and security headers
     shared/              Types, URL normalization, scoring engine
+    testing/             Shared fixtures
+  services/
+    collector/           Signal collection interfaces and timeout handling
+    worker/              Background job primitives
+  assets/                Branding, extension icons, diagrams
   docs/                  Architecture, API, legal, data-source notes
   infra/                 Docker and deployment assets
   .github/workflows/     CI
@@ -77,7 +86,7 @@ curl "http://localhost:8080/api/v1/check?url=https://example-broker.com"
 
 ## Data Sources
 
-The MVP ships with provider interfaces and deterministic mock providers so development is reliable without API keys. Production adapters can be added for:
+The MVP ships with provider interfaces and deterministic local behavior so development is reliable without API keys. Production adapters can be added for:
 
 - RDAP/WHOIS domain age and registration metadata
 - Certificate Transparency history
@@ -95,5 +104,28 @@ The MVP ships with provider interfaces and deterministic mock providers so devel
 ## Legal And Ethical Position
 
 TradeGuard Shield provides informational risk scoring. It does not declare a company guilty of fraud and does not replace financial, legal, or regulatory advice. Operators should provide appeal and correction workflows for site owners.
+
+## Implementation Status
+
+Implemented:
+
+- TypeScript monorepo
+- Fastify API with validation, security headers, request IDs, and SSRF guard
+- Rule-based explainable scoring
+- Manifest V3 extension with real icons and HTTP/HTTPS-only page matching
+- Dashboard MVP
+- Collector/worker interfaces
+- Memory cache and persistence adapters
+- PostgreSQL schema migration draft
+- CI and security workflows
+
+Planned before production:
+
+- Real PostgreSQL adapter
+- Real Redis adapter
+- Authenticated dashboard
+- External data-provider credentials and adapters
+- Full regulator registry ingestion
+- Independent scoring methodology review
 
 

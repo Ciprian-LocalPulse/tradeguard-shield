@@ -19,6 +19,30 @@ header {
   margin-bottom: 24px;
 }
 
+.status {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status.loading {
+  background: #eef2f7;
+  color: #475467;
+}
+
+.status.online {
+  background: #dcfae6;
+  color: #067647;
+}
+
+.status.offline {
+  background: #fee4e2;
+  color: #b42318;
+}
+
 h1,
 h2,
 p {
@@ -62,4 +86,9 @@ td {
   border-bottom: 1px solid #e6eaf0;
   padding: 12px;
   text-align: left;
+}
+
+.empty-note {
+  margin-top: 12px;
+  color: #5c677d;
 }

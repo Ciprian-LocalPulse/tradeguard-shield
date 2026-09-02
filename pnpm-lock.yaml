@@ -14,6 +14,9 @@ importers:
       eslint:
         specifier: ^9.9.1
         version: 9.39.5(supports-color@7.2.0)
+      prettier:
+        specifier: ^3.3.3
+        version: 3.9.6
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
@@ -29,6 +32,15 @@ importers:
       '@fastify/rate-limit':
         specifier: ^10.0.0
         version: 10.3.0
+      '@tradeguard/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@tradeguard/logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@tradeguard/security':
+        specifier: workspace:*
+        version: link:../../packages/security
       '@tradeguard/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -80,8 +92,77 @@ importers:
         specifier: ^5.5.4
         version: 5.9.3
 
+  packages/config:
+    dependencies:
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.5
+        version: 2.1.9(@types/node@22.20.1)(supports-color@7.2.0)
+
+  packages/logger:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.5
+        version: 2.1.9(@types/node@22.20.1)(supports-color@7.2.0)
+
+  packages/security:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.5
+        version: 2.1.9(@types/node@22.20.1)(supports-color@7.2.0)
+
   packages/shared:
     devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.5
+        version: 2.1.9(@types/node@22.20.1)(supports-color@7.2.0)
+
+  packages/testing:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+
+  services/collector:
+    dependencies:
+      '@tradeguard/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+    devDependencies:
+      tsx:
+        specifier: ^4.19.0
+        version: 4.23.13
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.5
+        version: 2.1.9(@types/node@22.20.1)(supports-color@7.2.0)
+
+  services/worker:
+    dependencies:
+      '@tradeguard/collector':
+        specifier: workspace:*
+        version: link:../collector
+    devDependencies:
+      tsx:
+        specifier: ^4.19.0
+        version: 4.23.13
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
@@ -1239,6 +1320,11 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  prettier@3.9.6:
+    resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   process-warning@3.0.0:
     resolution: {integrity: sha512-mqn0kFRl0EoqhnL0GQ0veqFHyIN1yig9RHh/InzORTUiZHFRAur+aMtRkELNwGs9aNwKS6tg/An4NYBPGwvtzQ==}
@@ -2534,6 +2620,8 @@ snapshots:
       source-map-js: 1.2.1
 
   prelude-ls@1.2.1: {}
+
+  prettier@3.9.6: {}
 
   process-warning@3.0.0: {}
 

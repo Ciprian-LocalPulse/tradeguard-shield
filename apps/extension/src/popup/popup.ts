@@ -26,7 +26,7 @@ async function load() {
 
 document.querySelector("#report")?.addEventListener("click", async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  await chrome.tabs.create({ url: `mailto:abuse@example.com?subject=TradeGuard report&body=${encodeURIComponent(tab.url ?? "")}` });
+  await chrome.tabs.create({ url: `mailto:contact@agentflow-enterprise.com?subject=TradeGuard report&body=${encodeURIComponent(tab.url ?? "")}` });
 });
 
 void load();

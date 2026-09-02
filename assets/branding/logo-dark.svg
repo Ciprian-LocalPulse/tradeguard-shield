@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">TradeGuard Shield dark logo</title>
+  <rect width="256" height="256" rx="48" fill="#0b1220"/>
+  <path d="M128 28 210 62v62c0 52-33 91-82 110-49-19-82-58-82-110V62l82-34Z" fill="#1f6feb"/>
+  <path d="M83 132h18v42H83v-42Zm36-34h18v76h-18V98Zm36-28h18v104h-18V70Z" fill="#ffffff"/>
+  <path d="m82 111 34 34 62-69" fill="none" stroke="#22c55e" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

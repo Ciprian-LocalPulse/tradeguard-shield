@@ -1,0 +1,32 @@
+name: Extension Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  package-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.9.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm --filter @tradeguard/extension build
+      - name: Package extension
+        run: |
+          cd apps/extension/build
+          zip -r ../tradeguard-shield-extension.zip .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tradeguard-shield-extension
+          path: apps/extension/tradeguard-shield-extension.zip

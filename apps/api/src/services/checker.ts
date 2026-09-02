@@ -1,15 +1,22 @@
+import { validatePublicHttpUrl } from "@tradeguard/security";
 import { calculateScore, extractRegistrableDomain, type CheckResponse, type DomainSignals } from "@tradeguard/shared";
 import { config } from "../config.js";
+import { badRequest } from "../errors.js";
 import { analyzeContentClaims } from "../signals/content-analysis.js";
 import { checkRegulators } from "../signals/regulators.js";
 import { checkThreatFeeds } from "../signals/threat-feeds.js";
 import { checkTls } from "../signals/tls.js";
 import { lookupRdap } from "../signals/rdap.js";
-import { checkCache } from "../stores/check-cache.js";
+import { runtime } from "./runtime.js";
 
 export async function checkDomain(inputUrl: string): Promise<CheckResponse> {
+  const safeUrl = validatePublicHttpUrl(inputUrl);
+  if (!safeUrl.ok) {
+    throw badRequest("UNSAFE_URL", safeUrl.reason ?? "URL cannot be checked safely.");
+  }
+
   const domain = extractRegistrableDomain(inputUrl);
-  const cached = checkCache.get(domain);
+  const cached = await runtime.checkCache.get(domain);
 
   if (cached) {
     return cached;
@@ -40,9 +47,10 @@ export async function checkDomain(inputUrl: string): Promise<CheckResponse> {
     domain,
     ...score,
     checkedAt: new Date().toISOString(),
-    cacheTtlSeconds: config.cacheTtlSeconds
+    cacheTtlSeconds: config.CHECK_CACHE_TTL_SECONDS
   };
 
-  checkCache.set(domain, response);
+  await runtime.checkCache.set(domain, response, config.CHECK_CACHE_TTL_SECONDS);
+  await runtime.persistence.saveCheck(response, signals);
   return response;
 }

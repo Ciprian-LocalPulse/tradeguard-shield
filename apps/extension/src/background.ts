@@ -9,8 +9,26 @@ async function checkTab(tabId: number, url?: string) {
   if (!url || !/^https?:\/\//i.test(url)) return;
 
   const apiBaseUrl = await getApiBaseUrl();
-  const response = await fetch(`${apiBaseUrl}/api/v1/check?url=${encodeURIComponent(url)}`);
-  const result = await response.json();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  let result;
+
+  try {
+    const response = await fetch(`${apiBaseUrl}/api/v1/check?url=${encodeURIComponent(url)}`, {
+      signal: controller.signal
+    });
+    result = await response.json();
+  } catch {
+    result = {
+      domain: new URL(url).hostname,
+      score: 0,
+      riskLevel: "medium",
+      badge: "yellow",
+      reasons: [{ detail: "TradeGuard API is unavailable. No risk verdict is available for this page." }]
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
 
   await chrome.storage.local.set({ [`check:${tabId}`]: result });
   await chrome.action.setBadgeText({ tabId, text: result.badge === "green" ? "OK" : result.badge === "yellow" ? "!" : "!!" });

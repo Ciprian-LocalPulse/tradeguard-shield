@@ -5,7 +5,7 @@
 ```bash
 pnpm install
 pnpm build
-docker compose -f infra/docker-compose.yml up --build
+docker compose -f infra/compose/dev.yml up --build
 ```
 
 ## Production
