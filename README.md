@@ -96,10 +96,4 @@ The MVP ships with provider interfaces and deterministic mock providers so devel
 
 TradeGuard Shield provides informational risk scoring. It does not declare a company guilty of fraud and does not replace financial, legal, or regulatory advice. Operators should provide appeal and correction workflows for site owners.
 
-## GitHub Metadata
 
-Recommended repository title: `TradeGuard Shield`
-
-Recommended description: `Real-time API and browser extension for checking the legitimacy and risk level of trading websites.`
-
-Recommended topics: `trading`, `fraud-detection`, `browser-extension`, `cybersecurity`, `risk-scoring`, `fastify`, `typescript`, `fintech`, `phishing-detection`, `osint`
