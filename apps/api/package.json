@@ -19,7 +19,7 @@
     "@tradeguard/security": "workspace:*",
     "@tradeguard/shared": "workspace:*",
     "fastify": "^5.8.5",
-    "zod": "^3.23.8"
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "tsx": "^4.19.0",
