@@ -22,6 +22,6 @@ export function createLogEvent(level: "info" | "warn" | "error", message: string
     level,
     message,
     time: new Date().toISOString(),
-    ...redactSensitive(context)
+    ...(redactSensitive(context) as Record<string, unknown>)
   };
 }
