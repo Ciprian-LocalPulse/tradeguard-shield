@@ -1,0 +1,25 @@
+{
+  "name": "tradeguard-shield",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Real-time API and browser extension for checking the legitimacy and risk level of trading websites.",
+  "author": "Ciprian Ștefan Pleșca",
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm --filter @tradeguard/shared build && pnpm --filter @tradeguard/api build && pnpm --filter @tradeguard/extension build && pnpm --filter @tradeguard/dashboard build",
+    "dev": "pnpm --parallel dev",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm --filter @tradeguard/shared build && pnpm --filter @tradeguard/api typecheck && pnpm --filter @tradeguard/extension typecheck && pnpm --filter @tradeguard/dashboard typecheck"
+  },
+  "packageManager": "pnpm@9.9.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "eslint": "^9.9.1",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
+}

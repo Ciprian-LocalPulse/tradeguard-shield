@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  color: #172033;
+  font: 15px system-ui, sans-serif;
+}
+
+main {
+  max-width: 560px;
+  padding: 24px;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+}
+
+input,
+button {
+  border-radius: 6px;
+  padding: 10px;
+  font: inherit;
+}

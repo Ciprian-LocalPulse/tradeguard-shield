@@ -1,0 +1,33 @@
+body {
+  width: 320px;
+  margin: 0;
+  color: #172033;
+  font: 14px system-ui, sans-serif;
+}
+
+main {
+  padding: 16px;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+body[data-badge="green"] h1 { color: #147d3f; }
+body[data-badge="yellow"] h1 { color: #946200; }
+body[data-badge="red"] h1 { color: #b42318; }
+
+ul {
+  padding-left: 18px;
+}
+
+button {
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px;
+  background: #1f6feb;
+  color: white;
+  font-weight: 600;
+}
