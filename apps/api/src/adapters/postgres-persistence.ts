@@ -9,10 +9,10 @@ export class PostgresPersistenceAdapter implements PersistencePort {
     throw new Error("PostgreSQL adapter requires a database client implementation before production use.");
   }
 
-  async saveReport(_report: UserReport) {
-    void this.databaseUrl;
-    throw new Error("PostgreSQL adapter requires a database client implementation before production use.");
-  }
+  async saveReport(_report: UserReport): Promise<{ id: string; createdAt: string; status: "new" | "reviewing" | "closed"; }> {
+  void this.databaseUrl;
+  throw new Error("PostgreSQL adapter requires a database client implementation before production use.");
+}
 
   async saveAuditEvent(_event: AuditEvent): Promise<void> {
     void this.databaseUrl;
