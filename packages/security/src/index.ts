@@ -8,9 +8,16 @@ export interface UrlSafetyResult {
 }
 
 export function validatePublicHttpUrl(input: string): UrlSafetyResult {
+  const trimmedInput = input.trim();
+  
+  // Respinge din start protocoalele care nu sunt http/https (ex: file://, ftp://)
+  if (!/^https?:\/\//i.test(trimmedInput) && /^[a-z]+:\/\//i.test(trimmedInput)) {
+    return { ok: false, reason: "Only http and https URLs are supported." };
+  }
+
   let url: URL;
   try {
-    url = new URL(/^https?:\/\//i.test(input.trim()) ? input.trim() : `https://${input.trim()}`);
+    url = new URL(/^https?:\/\//i.test(trimmedInput) ? trimmedInput : `https://${trimmedInput}`);
   } catch {
     return { ok: false, reason: "The provided value is not a valid URL." };
   }
