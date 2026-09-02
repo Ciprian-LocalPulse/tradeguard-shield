@@ -18,12 +18,12 @@
     "@tradeguard/logger": "workspace:*",
     "@tradeguard/security": "workspace:*",
     "@tradeguard/shared": "workspace:*",
-    "fastify": "^4.28.1",
+    "fastify": "^5.8.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "tsx": "^4.19.0",
     "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
+    "vitest": "^3.2.6"
   }
 }
