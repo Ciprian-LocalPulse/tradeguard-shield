@@ -1,6 +1,12 @@
 import type { CheckResponse, DomainSignals, UserReport } from "@tradeguard/shared";
 import { Pool } from "pg";
-import type { AuditEvent, DomainFeedback, PersistencePort } from "../ports/persistence.js";
+import type {
+  AuditEvent,
+  DashboardStats,
+  DomainFeedback,
+  DomainSummary,
+  PersistencePort
+} from "../ports/persistence.js";
 
 export class PostgresPersistenceAdapter implements PersistencePort {
   private readonly pool: Pool;
@@ -112,6 +118,34 @@ export class PostgresPersistenceAdapter implements PersistencePort {
   async countReports(): Promise<number> {
     const result = await this.pool.query<{ count: string }>("SELECT COUNT(*)::text AS count FROM reports");
     return Number(result.rows[0]?.count ?? 0);
+  }
+
+  async getStats(): Promise<DashboardStats> {
+    const result = await this.pool.query<{ checks24h: string; reports24h: string; highRiskDomains: string }>(`
+      SELECT
+        (SELECT COUNT(*) FROM checks WHERE checked_at >= NOW() - INTERVAL '24 hours')::text AS "checks24h",
+        (SELECT COUNT(*) FROM reports WHERE created_at >= NOW() - INTERVAL '24 hours')::text AS "reports24h",
+        (SELECT COUNT(DISTINCT d.domain) FROM checks c JOIN domains d ON d.id = c.domain_id
+         WHERE c.risk_level = 'high' AND c.checked_at >= NOW() - INTERVAL '24 hours')::text AS "highRiskDomains"
+    `);
+    const row = result.rows[0];
+    return {
+      checks24h: Number(row?.checks24h ?? 0),
+      reports24h: Number(row?.reports24h ?? 0),
+      highRiskDomains: Number(row?.highRiskDomains ?? 0)
+    };
+  }
+
+  async searchDomains(query: string): Promise<DomainSummary[]> {
+    const result = await this.pool.query<DomainSummary>(
+      `SELECT d.domain, c.score, c.risk_level AS "riskLevel", c.checked_at AS "checkedAt"
+       FROM checks c JOIN domains d ON d.id = c.domain_id
+       WHERE d.domain ILIKE $1
+       ORDER BY c.checked_at DESC
+       LIMIT 50`,
+      [`%${query.trim()}%`]
+    );
+    return result.rows;
   }
 
   async close(): Promise<void> {

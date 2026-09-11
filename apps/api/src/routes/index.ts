@@ -1,8 +1,9 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
-import { badRequest } from "../errors.js";
+import { badRequest, PublicApiError } from "../errors.js";
 import { checkDomain } from "../services/checker.js";
 import { runtime, runtimeReadiness } from "../services/runtime.js";
+import { config } from "../config.js";
 
 const checkQuerySchema = z.object({ url: z.string().min(3).max(2048) });
 const reportSchema = z.object({
@@ -15,6 +16,23 @@ const feedbackSchema = z.object({
   accurate: z.boolean(),
   note: z.string().max(1000).optional()
 });
+
+function requireDashboardAccess(request: { headers: Record<string, string | string[] | undefined> }) {
+  if (!config.DASHBOARD_API_KEY) {
+    if (config.NODE_ENV === "production") {
+      throw new PublicApiError(503, "DASHBOARD_AUTH_NOT_CONFIGURED", "Dashboard authentication is not configured.");
+    }
+    return;
+  }
+  const authorization = request.headers.authorization;
+  const presented =
+    typeof authorization === "string" && authorization.startsWith("Bearer ")
+      ? authorization.slice("Bearer ".length)
+      : request.headers["x-dashboard-api-key"];
+  if (presented !== config.DASHBOARD_API_KEY) {
+    throw new PublicApiError(401, "UNAUTHORIZED_DASHBOARD", "Dashboard authentication is required.");
+  }
+}
 
 export function registerRoutes(app: FastifyInstance) {
   app.get("/api/v1/health", async () => ({
@@ -33,7 +51,8 @@ export function registerRoutes(app: FastifyInstance) {
     dependencies: runtimeReadiness()
   }));
 
-  app.get("/api/v1/metrics", async (_request, reply) => {
+  app.get("/api/v1/metrics", async (request, reply) => {
+    requireDashboardAccess(request);
     reply.type("text/plain; version=0.0.4");
     return [
       "# HELP tradeguard_reports_total User reports accepted",
@@ -75,15 +94,15 @@ export function registerRoutes(app: FastifyInstance) {
   );
 
   app.get<{ Querystring: { q?: string } }>("/api/v1/domains", async (request) => {
+    requireDashboardAccess(request);
     return {
       query: request.query.q ?? "",
-      domains: []
+      domains: await runtime.persistence.searchDomains(request.query.q ?? "")
     };
   });
 
-  app.get("/api/v1/stats", async () => ({
-    checks24h: 0,
-    reports24h: await runtime.persistence.countReports(),
-    highRiskDomains: 0
-  }));
+  app.get("/api/v1/stats", async (request) => {
+    requireDashboardAccess(request);
+    return runtime.persistence.getStats();
+  });
 }

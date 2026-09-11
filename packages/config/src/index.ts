@@ -11,7 +11,8 @@ const envSchema = z.object({
   REQUEST_TIMEOUT_MS: z.coerce.number().int().min(500).max(30000).default(5000),
   REDIS_URL: z.string().url().optional(),
   DATABASE_URL: z.string().url().optional(),
-  GOOGLE_SAFE_BROWSING_API_KEY: z.string().optional()
+  GOOGLE_SAFE_BROWSING_API_KEY: z.string().optional(),
+  DASHBOARD_API_KEY: z.string().min(16).optional()
 });
 
 export type TradeGuardConfig = z.infer<typeof envSchema> & {
@@ -22,6 +23,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): TradeGuardConf
   const parsed = envSchema.parse(env);
   return {
     ...parsed,
-    allowedCorsOrigins: parsed.ALLOWED_CORS_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean)
+    allowedCorsOrigins: parsed.ALLOWED_CORS_ORIGINS.split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean)
   };
 }

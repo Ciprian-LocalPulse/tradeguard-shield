@@ -38,4 +38,33 @@ describe("feedback route", () => {
     await app.close();
     expect(response.statusCode).toBe(400);
   });
+
+  it("serves persistence-backed dashboard stats and domain search", async () => {
+    const app = Fastify();
+    const originalPersistence = runtime.persistence;
+    const persistence = new MemoryPersistenceAdapter();
+    runtime.persistence = persistence;
+    await persistence.saveCheck(
+      {
+        domain: "risk.example",
+        score: 20,
+        riskLevel: "high",
+        badge: "red",
+        reasons: [],
+        checkedAt: new Date().toISOString(),
+        cacheTtlSeconds: 3600
+      },
+      { domain: "risk.example" }
+    );
+    registerRoutes(app);
+
+    const stats = await app.inject({ method: "GET", url: "/api/v1/stats" });
+    const domains = await app.inject({ method: "GET", url: "/api/v1/domains?q=risk" });
+
+    runtime.persistence = originalPersistence;
+    await app.close();
+    expect(stats.statusCode).toBe(200);
+    expect(stats.json()).toMatchObject({ checks24h: 1, highRiskDomains: 1 });
+    expect(domains.json().domains).toHaveLength(1);
+  });
 });
