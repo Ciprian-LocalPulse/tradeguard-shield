@@ -5,6 +5,19 @@ import { registerRoutes } from "./index.js";
 import { runtime } from "../services/runtime.js";
 
 describe("feedback route", () => {
+  it("serves the public OpenAPI contract", async () => {
+    const app = Fastify();
+    registerRoutes(app);
+
+    const response = await app.inject({ method: "GET", url: "/api/v1/openapi.json" });
+
+    await app.close();
+    expect(response.statusCode).toBe(200);
+    expect(response.headers["content-type"]).toContain("application/json");
+    expect(response.json()).toMatchObject({ openapi: "3.0.3", info: { title: "TradeGuard Shield API" } });
+    expect(response.json().paths["/api/v1/check"].get.parameters[0].name).toBe("url");
+  });
+
   it("persists valid feedback and returns a tracking id", async () => {
     const app = Fastify();
     const originalPersistence = runtime.persistence;

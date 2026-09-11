@@ -1,19 +1,16 @@
-# OpenAPI Plan
+# OpenAPI Contract
 
-The API currently exposes stable JSON routes and Zod validation. A generated OpenAPI document should be added before public API launch.
+The API publishes its machine-readable contract at:
 
-## Current API Surface
+```text
+GET /api/v1/openapi.json
+```
 
-- `GET /api/v1/health`
-- `GET /api/v1/health/live`
-- `GET /api/v1/health/ready`
-- `GET /api/v1/metrics`
-- `GET /api/v1/check?url=`
-- `POST /api/v1/report`
-- `POST /api/v1/feedback`
-- `GET /api/v1/domains?q=`
-- `GET /api/v1/stats`
+The document follows OpenAPI 3.0.3 and describes the public check, report,
+feedback, health, metrics, domain-search, and statistics routes. Dashboard
+operations are documented with the `dashboardApiKey` bearer security scheme.
 
-## Production Requirement
-
-Use Fastify schema definitions or a Zod-to-OpenAPI generator so route validation and documentation cannot drift.
+The contract is intentionally maintained without a heavy runtime dependency.
+Route validation remains implemented by Zod and the response contract remains
+covered by an API test. When a route changes, update the document and its
+contract test in the same change.

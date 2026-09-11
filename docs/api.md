@@ -2,6 +2,8 @@
 
 Base path: `/api/v1`
 
+Machine-readable contract: [`GET /api/v1/openapi.json`](openapi.md).
+
 ## GET /health
 
 Returns service health.

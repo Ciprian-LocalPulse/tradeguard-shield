@@ -4,6 +4,7 @@ import { badRequest, PublicApiError } from "../errors.js";
 import { checkDomain } from "../services/checker.js";
 import { runtime, runtimeReadiness } from "../services/runtime.js";
 import { config } from "../config.js";
+import { openApiDocument } from "./openapi.js";
 
 const checkQuerySchema = z.object({ url: z.string().min(3).max(2048) });
 const reportSchema = z.object({
@@ -35,6 +36,8 @@ function requireDashboardAccess(request: { headers: Record<string, string | stri
 }
 
 export function registerRoutes(app: FastifyInstance) {
+  app.get("/api/v1/openapi.json", async (_request, reply) => reply.type("application/json").send(openApiDocument));
+
   app.get("/api/v1/health", async () => ({
     ok: true,
     service: "tradeguard-api"
