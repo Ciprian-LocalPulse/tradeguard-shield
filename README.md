@@ -198,6 +198,10 @@ If you wish to support this independent work, please contact the author at [cont
 - [Arabic project summary](docs/README.ar.md)
 - [Changelog](CHANGELOG.md)
 
-## License and citation
+## License, attribution, and citation
 
-Copyright (c) 2026 Ciprian Ștefan Pleșca. See [LICENSE](LICENSE) and [NOTICE](NOTICE) for the repository terms. For academic or technical reuse, cite the repository and identify the exact release, configuration, data sources, and observation date.
+This project is released under the [Apache License 2.0](LICENSE). You may use, modify, and redistribute it under that license, but redistributed copies and derivative works must preserve the copyright, license, and [NOTICE](NOTICE) material, identify modified files, and avoid implying that they are official TradeGuard Shield releases or authored by Ciprian Ștefan Pleșca.
+
+The Apache license does not grant rights to use the TradeGuard Shield name, logo, or marks to imply endorsement or origin. See the [Code of Conduct](CODE_OF_CONDUCT.md) for the project’s academic attribution and integrity standard.
+
+For academic or technical reuse, cite the repository and identify the exact release, configuration, data sources, and observation date.

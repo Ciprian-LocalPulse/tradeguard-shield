@@ -1,5 +1,17 @@
 TradeGuard Shield
-Copyright (c) 2026 Ciprian Ștefan Pleșca.
+Copyright 2026 Ciprian Ștefan Pleșca.
 
-The project name, architecture, implementation, documentation, and original
-source code in this repository are authored for Ciprian Ștefan Pleșca.
+This repository contains original source code, architecture, documentation,
+research writing, visual identity, and configuration authored by Ciprian
+Ștefan Pleșca, unless a file or section states otherwise.
+
+The project is licensed under the Apache License, Version 2.0. Redistribution
+must preserve this NOTICE file, the LICENSE file, applicable copyright notices,
+and any prominent notices identifying modifications. The Apache License does
+not grant permission to use the TradeGuard Shield name, logos, or marks to
+imply endorsement, origin, or official status for a modified or redistributed
+product.
+
+Derivative distributions must clearly distinguish their own changes and must
+not present modified work as the original TradeGuard Shield project or as an
+official release by Ciprian Ștefan Pleșca.
