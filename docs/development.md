@@ -17,4 +17,4 @@ pnpm build
 
 ## Local Services
 
-The MVP uses memory adapters by default. Set `DATABASE_URL` and `REDIS_URL` only after production adapters are implemented.
+The API uses memory adapters by default for local development. Set `DATABASE_URL` after applying `apps/api/db/migrations/0001_initial.sql` to activate PostgreSQL persistence. Set `REDIS_URL` to activate the Redis cache; Redis connection failures degrade to uncached requests.

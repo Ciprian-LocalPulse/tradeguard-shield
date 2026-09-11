@@ -91,7 +91,7 @@ curl "http://localhost:8080/api/v1/check?url=https://example-broker.com"
 
 ## Data Sources
 
-The MVP ships with provider interfaces and deterministic local behavior so development is reliable without API keys. Production adapters can be added for:
+The API uses real RDAP and threat-feed integrations while keeping neutral fallbacks for unavailable upstreams. Production deployments can add:
 
 - RDAP/WHOIS domain age and registration metadata
 - Certificate Transparency history
@@ -126,11 +126,9 @@ Implemented:
 
 Planned before production:
 
-- Real PostgreSQL adapter
-- Real Redis adapter
 - Authenticated dashboard
 - External data-provider credentials and adapters
 - Full regulator registry ingestion
 - Independent scoring methodology review
-
+- Disposable PostgreSQL/Redis integration tests and operational backup verification
 

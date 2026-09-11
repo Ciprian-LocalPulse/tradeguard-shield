@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+- Production PostgreSQL persistence selected automatically by `DATABASE_URL`.
+- Production Redis cache selected automatically by `REDIS_URL`, with a neutral cache-miss fallback when Redis is unavailable.
+- PostgreSQL adapter contract tests using a mocked pool.
+
 ## [0.2.0] - 2026-09-11
 
 ### Added
