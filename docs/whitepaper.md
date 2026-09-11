@@ -1,9 +1,9 @@
 # TradeGuard Shield
 ## An Explainable, Fail-Neutral Framework for Risk Triage of Online Trading Domains
 
-**Version:** 0.6.0 (research release)  
-**Date:** 11 September 2026  
-**Author:** Ciprian Ștefan Pleșca, independent Romanian researcher  
+**Version:** 0.6.0 (research release)
+**Date:** 11 September 2026
+**Author:** Ciprian Ștefan Pleșca, independent Romanian researcher
 **Contact:** contact@agentflow-enterrprise.com
 
 ## Abstract
