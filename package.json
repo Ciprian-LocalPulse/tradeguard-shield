@@ -1,6 +1,6 @@
 {
   "name": "tradeguard-shield",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Real-time API and browser extension for checking the legitimacy and risk level of trading websites.",
   "author": "Ciprian Ștefan Pleșca",

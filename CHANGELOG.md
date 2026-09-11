@@ -5,12 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0] - 2026-09-11
 
 ### Added
 
 - Replaced the demonstration regulator map with a real FCA Warning List RSS integration.
 - Added a 15-minute regulator-feed cache, three-second timeout, neutral failure semantics, and provider-matching tests.
+- Added reproducible binary evaluation metrics: confusion matrix, accuracy, precision, recall, specificity, and F1.
+- Added the academic whitepaper and documented the v0.5.0 research-release scope.
+- Added the public OpenAPI contract endpoint and route contract test.
+
+## [Unreleased]
+
+### Planned
+
+- Independent labelled evaluation and calibration study.
 
 ## [0.4.0] - 2026-09-11
 

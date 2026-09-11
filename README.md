@@ -12,7 +12,7 @@
 
 TradeGuard Shield studies whether heterogeneous, low-cost web signals can be composed into a transparent and operationally safe domain-risk assessment. The current system collects five signal families, applies bounded rule-based scoring, stores optional operational feedback, and exposes the result to both machine and human clients. The design prioritises reproducibility, explicit uncertainty, source attribution, fail-neutral behaviour, and protection against server-side request forgery.
 
-The system is currently at **v0.4.0**: the core API, scoring pipeline, browser-extension surface, dashboard, RDAP integration, OpenPhish cache, optional Google Safe Browsing integration, TLS probe, FCA Warning List integration, PostgreSQL/Redis adapters, and CI quality gates are implemented. Global regulator coverage, large-scale calibration, independent evaluation, and production compliance remain open research and engineering work.
+The system is currently at **v0.5.0**: the core API, scoring pipeline, browser-extension surface, dashboard, RDAP integration, OpenPhish cache, optional Google Safe Browsing integration, TLS probe, FCA Warning List integration, OpenAPI contract, reproducible evaluation metrics, PostgreSQL/Redis adapters, and CI quality gates are implemented. Global regulator coverage, large-scale calibration, independent evaluation, and production compliance remain open research and engineering work.
 
 ## Author and research profile
 
@@ -192,6 +192,7 @@ If you wish to support this independent work, please contact the author at [cont
 
 - [Author and research profile](docs/author.md)
 - [Research methodology](docs/research-methodology.md)
+- [Academic whitepaper](docs/whitepaper.md)
 - [Architecture](docs/architecture.md)
 - [API reference](docs/api.md)
 - [Data sources](docs/data-sources.md)
