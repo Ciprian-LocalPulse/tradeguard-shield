@@ -1,18 +1,18 @@
 {
   "name": "tradeguard-shield",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "description": "Real-time API and browser extension for checking the legitimacy and risk level of trading websites.",
   "author": "Ciprian Ștefan Pleșca",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "pnpm --filter @tradeguard/config build && pnpm --filter @tradeguard/logger build && pnpm --filter @tradeguard/security build && pnpm --filter @tradeguard/shared build && pnpm --filter @tradeguard/testing build && pnpm --filter @tradeguard/api build && pnpm --filter @tradeguard/extension build && pnpm --filter @tradeguard/dashboard build && pnpm --filter @tradeguard/collector build && pnpm --filter @tradeguard/worker build",
+    "build": "pnpm --filter @tradeguard/config build && pnpm --filter @tradeguard/logger build && pnpm --filter @tradeguard/security build && pnpm --filter @tradeguard/shared build && pnpm --filter @tradeguard/testing build && pnpm --filter @tradeguard/api build && pnpm --filter @tradeguard/extension build && pnpm --filter @tradeguard/dashboard build && pnpm --filter @tradeguard/collector build && pnpm --filter @tradeguard/evaluation build && pnpm --filter @tradeguard/worker build",
     "dev": "pnpm --parallel dev",
     "format:check": "prettier . --check",
     "lint": "pnpm -r lint",
     "security:audit": "pnpm audit --audit-level moderate",
     "test": "pnpm -r test",
-    "typecheck": "pnpm --filter @tradeguard/config build && pnpm --filter @tradeguard/logger build && pnpm --filter @tradeguard/security build && pnpm --filter @tradeguard/shared build && pnpm --filter @tradeguard/testing build && pnpm --filter @tradeguard/api typecheck && pnpm --filter @tradeguard/extension typecheck && pnpm --filter @tradeguard/dashboard typecheck && pnpm --filter @tradeguard/collector typecheck && pnpm --filter @tradeguard/worker typecheck"
+    "typecheck": "pnpm --filter @tradeguard/config build && pnpm --filter @tradeguard/logger build && pnpm --filter @tradeguard/security build && pnpm --filter @tradeguard/shared build && pnpm --filter @tradeguard/testing build && pnpm --filter @tradeguard/api typecheck && pnpm --filter @tradeguard/extension typecheck && pnpm --filter @tradeguard/dashboard typecheck && pnpm --filter @tradeguard/collector typecheck && pnpm --filter @tradeguard/evaluation typecheck && pnpm --filter @tradeguard/worker typecheck"
   },
   "packageManager": "pnpm@9.9.0",
   "engines": {

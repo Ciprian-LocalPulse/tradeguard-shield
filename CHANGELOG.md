@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.0] - 2026-09-11
+## [0.6.0] - 2026-09-11
 
 ### Added
 
@@ -14,12 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added reproducible binary evaluation metrics: confusion matrix, accuracy, precision, recall, specificity, and F1.
 - Added the academic whitepaper and documented the v0.5.0 research-release scope.
 - Added the public OpenAPI contract endpoint and route contract test.
+- Added the executable `@tradeguard/evaluation` workspace and CSV evaluation CLI.
+- Added evaluator input validation and reproducibility documentation.
 
 ## [Unreleased]
 
 ### Planned
 
 - Independent labelled evaluation and calibration study.
+- Dashboard usability and operational observability improvements.
 
 ## [0.4.0] - 2026-09-11
 

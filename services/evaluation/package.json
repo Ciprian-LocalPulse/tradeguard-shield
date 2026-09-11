@@ -1,0 +1,22 @@
+{
+  "name": "@tradeguard/evaluation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "pnpm --filter @tradeguard/shared build && tsc -p tsconfig.json",
+    "evaluate": "pnpm --filter @tradeguard/shared build && tsx src/cli.ts",
+    "lint": "pnpm --filter @tradeguard/shared build && tsc -p tsconfig.json --noEmit",
+    "test": "pnpm --filter @tradeguard/shared build && vitest run",
+    "typecheck": "pnpm --filter @tradeguard/shared build && tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@tradeguard/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vitest": "^5.0.0"
+  }
+}

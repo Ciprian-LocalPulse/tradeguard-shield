@@ -1,7 +1,7 @@
 # TradeGuard Shield
 ## An Explainable, Fail-Neutral Framework for Risk Triage of Online Trading Domains
 
-**Version:** 0.5.0 (research release)  
+**Version:** 0.6.0 (research release)  
 **Date:** 11 September 2026  
 **Author:** Ciprian Ștefan Pleșca, independent Romanian researcher  
 **Contact:** contact@agentflow-enterrprise.com
@@ -103,9 +103,9 @@ defaults, not empirically calibrated probabilities.
 
 ## 5. Evaluation protocol
 
-Version 0.5.0 adds `evaluateBinaryClassifier()` to the shared package. It
-accepts an externally prepared labelled sample containing `actualHighRisk` and
-`predictedHighRisk` values and returns:
+Version 0.6.0 adds `evaluateBinaryClassifier()` to the shared package and a
+CLI in `services/evaluation`. It accepts an externally prepared labelled sample
+containing `actualHighRisk` and `predictedHighRisk` values and returns:
 
 - confusion-matrix counts;
 - sample count;
@@ -162,7 +162,7 @@ publication of allegations, or regulatory action.
 
 ## 8. Reproducibility and release state
 
-The v0.5.0 research release includes the API, browser-extension surface,
+The v0.6.0 research release includes the API, browser-extension surface,
 dashboard, real provider integrations, OpenAPI contract, evaluation utility,
 unit tests, type checking, builds, and automated CI/Security/CodeQL gates.
 
@@ -192,7 +192,7 @@ sampling and uncertainty methodology.
 
 > Pleșca, Ciprian Ștefan. *TradeGuard Shield: An Explainable, Fail-Neutral
 > Framework for Risk Triage of Online Trading Domains*. Research release
-> v0.5.0, 2026. https://github.com/Ciprian-LocalPulse/tradeguard-shield
+> v0.6.0, 2026. https://github.com/Ciprian-LocalPulse/tradeguard-shield
 
 ## Source references
 
