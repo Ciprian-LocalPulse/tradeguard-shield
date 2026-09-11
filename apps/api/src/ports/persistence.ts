@@ -7,9 +7,16 @@ export interface AuditEvent {
   metadata?: Record<string, unknown>;
 }
 
+export interface DomainFeedback {
+  domain: string;
+  accurate: boolean;
+  note?: string;
+}
+
 export interface PersistencePort {
   saveCheck(response: CheckResponse, signals: DomainSignals): Promise<void>;
   saveReport(report: UserReport): Promise<{ id: string; createdAt: string; status: "new" | "reviewing" | "closed" }>;
+  saveFeedback(feedback: DomainFeedback): Promise<{ id: string; createdAt: string }>;
   saveAuditEvent(event: AuditEvent): Promise<void>;
   countReports(): Promise<number>;
 }

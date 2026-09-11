@@ -1,5 +1,5 @@
 import type { CheckResponse, DomainSignals, UserReport } from "@tradeguard/shared";
-import type { AuditEvent, PersistencePort } from "../ports/persistence.js";
+import type { AuditEvent, DomainFeedback, PersistencePort } from "../ports/persistence.js";
 
 export class PostgresPersistenceAdapter implements PersistencePort {
   constructor(private readonly databaseUrl: string) {}
@@ -9,10 +9,17 @@ export class PostgresPersistenceAdapter implements PersistencePort {
     throw new Error("PostgreSQL adapter requires a database client implementation before production use.");
   }
 
-  async saveReport(_report: UserReport): Promise<{ id: string; createdAt: string; status: "new" | "reviewing" | "closed"; }> {
-  void this.databaseUrl;
-  throw new Error("PostgreSQL adapter requires a database client implementation before production use.");
-}
+  async saveReport(
+    _report: UserReport
+  ): Promise<{ id: string; createdAt: string; status: "new" | "reviewing" | "closed" }> {
+    void this.databaseUrl;
+    throw new Error("PostgreSQL adapter requires a database client implementation before production use.");
+  }
+
+  async saveFeedback(_feedback: DomainFeedback): Promise<{ id: string; createdAt: string }> {
+    void this.databaseUrl;
+    throw new Error("PostgreSQL adapter requires a database client implementation before production use.");
+  }
 
   async saveAuditEvent(_event: AuditEvent): Promise<void> {
     void this.databaseUrl;

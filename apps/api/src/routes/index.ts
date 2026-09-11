@@ -35,7 +35,11 @@ export function registerRoutes(app: FastifyInstance) {
 
   app.get("/api/v1/metrics", async (_request, reply) => {
     reply.type("text/plain; version=0.0.4");
-    return ["# HELP tradeguard_reports_total User reports accepted", "# TYPE tradeguard_reports_total counter", `tradeguard_reports_total ${await runtime.persistence.countReports()}`].join("\n");
+    return [
+      "# HELP tradeguard_reports_total User reports accepted",
+      "# TYPE tradeguard_reports_total counter",
+      `tradeguard_reports_total ${await runtime.persistence.countReports()}`
+    ].join("\n");
   });
 
   app.get<{ Querystring: { url: string } }>("/api/v1/check", async (request, reply) => {
@@ -43,23 +47,32 @@ export function registerRoutes(app: FastifyInstance) {
     if (!parsed.success) throw badRequest("INVALID_CHECK_QUERY", "A valid url query parameter is required.");
 
     const result = await checkDomain(parsed.data.url);
-    return reply.header("cache-control", `private, max-age=${result.cacheTtlSeconds}`).send({ ...result, requestId: request.id });
+    return reply
+      .header("cache-control", `private, max-age=${result.cacheTtlSeconds}`)
+      .send({ ...result, requestId: request.id });
   });
 
-  app.post<{ Body: { url: string; reason: string; contactEmail?: string } }>("/api/v1/report", async (request, reply) => {
-    const parsed = reportSchema.safeParse(request.body);
-    if (!parsed.success) throw badRequest("INVALID_REPORT", "url, reason, and optional contactEmail must be valid.");
+  app.post<{ Body: { url: string; reason: string; contactEmail?: string } }>(
+    "/api/v1/report",
+    async (request, reply) => {
+      const parsed = reportSchema.safeParse(request.body);
+      if (!parsed.success) throw badRequest("INVALID_REPORT", "url, reason, and optional contactEmail must be valid.");
 
-    const report = await runtime.persistence.saveReport(parsed.data);
-    return reply.code(201).send(report);
-  });
+      const report = await runtime.persistence.saveReport(parsed.data);
+      return reply.code(201).send(report);
+    }
+  );
 
-  app.post<{ Body: { domain: string; accurate: boolean; note?: string } }>("/api/v1/feedback", async (request, reply) => {
-    const parsed = feedbackSchema.safeParse(request.body);
-    if (!parsed.success) throw badRequest("INVALID_FEEDBACK", "domain, accurate, and optional note must be valid.");
+  app.post<{ Body: { domain: string; accurate: boolean; note?: string } }>(
+    "/api/v1/feedback",
+    async (request, reply) => {
+      const parsed = feedbackSchema.safeParse(request.body);
+      if (!parsed.success) throw badRequest("INVALID_FEEDBACK", "domain, accurate, and optional note must be valid.");
 
-    return reply.code(202).send({ accepted: true });
-  });
+      const feedback = await runtime.persistence.saveFeedback(parsed.data);
+      return reply.code(202).send({ accepted: true, ...feedback });
+    }
+  );
 
   app.get<{ Querystring: { q?: string } }>("/api/v1/domains", async (request) => {
     return {

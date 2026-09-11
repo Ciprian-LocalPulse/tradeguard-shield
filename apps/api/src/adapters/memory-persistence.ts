@@ -1,9 +1,12 @@
 import type { CheckResponse, DomainSignals, UserReport } from "@tradeguard/shared";
-import type { AuditEvent, PersistencePort } from "../ports/persistence.js";
+import type { AuditEvent, DomainFeedback, PersistencePort } from "../ports/persistence.js";
 
 export class MemoryPersistenceAdapter implements PersistencePort {
   private readonly checks: Array<{ response: CheckResponse; signals: DomainSignals }> = [];
-  private readonly reports: Array<UserReport & { id: string; createdAt: string; status: "new" | "reviewing" | "closed" }> = [];
+  private readonly reports: Array<
+    UserReport & { id: string; createdAt: string; status: "new" | "reviewing" | "closed" }
+  > = [];
+  private readonly feedback: Array<DomainFeedback & { id: string; createdAt: string }> = [];
   private readonly auditEvents: AuditEvent[] = [];
 
   async saveCheck(response: CheckResponse, signals: DomainSignals): Promise<void> {
@@ -19,6 +22,16 @@ export class MemoryPersistenceAdapter implements PersistencePort {
     };
     this.reports.push(stored);
     return stored;
+  }
+
+  async saveFeedback(feedback: DomainFeedback) {
+    const stored = {
+      ...feedback,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString()
+    };
+    this.feedback.push(stored);
+    return { id: stored.id, createdAt: stored.createdAt };
   }
 
   async saveAuditEvent(event: AuditEvent): Promise<void> {
