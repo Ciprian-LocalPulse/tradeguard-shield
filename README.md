@@ -12,7 +12,7 @@
 
 TradeGuard Shield studies whether heterogeneous, low-cost web signals can be composed into a transparent and operationally safe domain-risk assessment. The current system collects five signal families, applies bounded rule-based scoring, stores optional operational feedback, and exposes the result to both machine and human clients. The design prioritises reproducibility, explicit uncertainty, source attribution, fail-neutral behaviour, and protection against server-side request forgery.
 
-The system is currently at **v0.4.0**: the core API, scoring pipeline, browser-extension surface, dashboard, RDAP integration, OpenPhish cache, optional Google Safe Browsing integration, TLS probe, PostgreSQL/Redis adapters, and CI quality gates are implemented. Regulator data ingestion, large-scale calibration, independent evaluation, and production compliance remain open research and engineering work.
+The system is currently at **v0.4.0**: the core API, scoring pipeline, browser-extension surface, dashboard, RDAP integration, OpenPhish cache, optional Google Safe Browsing integration, TLS probe, FCA Warning List integration, PostgreSQL/Redis adapters, and CI quality gates are implemented. Global regulator coverage, large-scale calibration, independent evaluation, and production compliance remain open research and engineering work.
 
 ## Author and research profile
 
@@ -157,7 +157,7 @@ assets/            Branding, diagrams, and author media supplied by the author
 | OpenPhish public feed | Cached URL/domain threat matching | Public feed coverage and freshness are outside this project’s control |
 | Google Safe Browsing v4 | Optional threat match query | Requires a Google Cloud API key and is subject to Google quotas/terms |
 | TLS endpoint probe | HTTPS reachability and certificate authorisation | Network vantage point and transient outages can affect observations |
-| Regulator mappings | Conservative signal layer | Current coverage is limited; it is not a complete or authoritative global register |
+| FCA Warning List RSS | Cached warning-domain matching | UK-focused warning feed; not an authorisation proof or a complete global register |
 
 Read the full [data-source methodology](docs/data-sources.md) before interpreting a result.
 
@@ -171,7 +171,7 @@ Read the full [data-source methodology](docs/data-sources.md) before interpretin
 | TLS probe | Implemented with bounded HTTPS request |
 | Dashboard and extension surfaces | MVP implemented; further UX and deployment hardening remain |
 | PostgreSQL and Redis adapters | Implemented; production backup/observability validation remains |
-| Regulator ingestion | Limited/partial; not a complete global regulator database |
+| Regulator ingestion | FCA Warning List integration; not a complete global regulator database |
 | Independent accuracy evaluation | Not yet completed |
 | Regulatory/compliance certification | Not claimed |
 
