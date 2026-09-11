@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-09-11
+
+### Added
+- Real RDAP lookups with registration age, WHOIS privacy-proxy detection, explicit timeouts, and neutral failure handling.
+- OpenPhish integration with a 15-minute local cache.
+- Optional Google Safe Browsing v4 integration through `GOOGLE_SAFE_BROWSING_API_KEY`.
+- Durable feedback submissions with tracking IDs and timestamps.
+- CI compatibility with Node 22.12.0, Vitest 5, and Vite 8.
+
+### Verified
+- Workspace tests, typechecks, builds, extension packaging, and dependency audit pass.
+- GitHub Actions CI, Security, Extension Build, and CodeQL checks pass.
+
 ## [0.1.0] - 2026-09-02
 
 ### Added
@@ -30,3 +43,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scoring methodology has not yet undergone independent review.
 
 [0.1.0]: https://github.com/Ciprian-LocalPulse/tradeguard-shield/releases/tag/v0.1.0
+[0.2.0]: https://github.com/Ciprian-LocalPulse/tradeguard-shield/releases/tag/v0.2.0
