@@ -73,22 +73,25 @@ The shared package maps bounded signal evidence to a score from 0 to 100 and the
 
 ```mermaid
 sequenceDiagram
-  participant Client
-  participant API as Fastify API
-  participant Signals as Signal orchestrator
-  participant RDAP as RDAP registry
-  participant Feeds as OpenPhish / Safe Browsing
-  participant Score as Shared scorer
+    participant Client
+    participant API as Fastify API
+    participant Signals as Signal orchestrator
+    participant RDAP as RDAP registry
+    participant Feeds as OpenPhish / Safe Browsing
+    participant Score as Shared scorer
 
-  Client->>API: GET /api/v1/check?url=...
-  API->>Signals: validate and collect(domain)
-  par bounded external calls
-    Signals->>RDAP: domain lookup (3 s timeout)
-    Signals->>Feeds: threat lookup (3 s timeout; feed cache 15 min)
-  end
-  Signals->>Score: typed evidence with unknowns preserved
-  Score-->>API: score, level, badge, reasons
-  API-->>Client: explainable JSON response
+    Client->>API: GET /api/v1/check?url=...
+    API->>Signals: validate and collect(domain)
+
+    par RDAP lookup
+        Signals->>RDAP: domain lookup (3 s timeout)
+    and Threat intelligence
+        Signals->>Feeds: threat lookup (3 s timeout, 15 min cache)
+    end
+
+    Signals->>Score: typed evidence with unknowns preserved
+    Score-->>API: score, level, badge, reasons
+    API-->>Client: explainable JSON response
 ```
 
 ## Quick start
