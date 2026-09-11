@@ -1,71 +1,117 @@
 # TradeGuard Shield
 
 <p align="center">
-  <img src="assets/TRADEGUARD-SHIELD-BANNER.png" alt="TradeGuard Shield Banner" width="100%">
+  <img src="assets/TRADEGUARD-SHIELD-BANNER.png" alt="TradeGuard Shield banner" width="100%">
 </p>
 
-Real-time risk intelligence for trading websites: an API, browser extension, and dashboard that help users spot high-risk brokers, phishing clones, and suspicious trading platforms before they deposit money.
+**TradeGuard Shield** is an explainable risk-intelligence system for trading websites. It combines a Fastify API, a browser extension, a dashboard, and a shared TypeScript scoring model to help users identify signals associated with phishing, impersonation, immature domains, insecure transport, and unverified trading claims before money is deposited.
 
+> This repository is an independent research and engineering project. It produces evidence-oriented risk indicators, not legal, financial, regulatory, or fraud determinations.
 
-## Author and Copyright
+## Abstract
 
-Copyright (c) 2026 Ciprian Ștefan Pleșca. All rights reserved unless explicitly granted by the license in this repository.
+TradeGuard Shield studies whether heterogeneous, low-cost web signals can be composed into a transparent and operationally safe domain-risk assessment. The current system collects five signal families, applies bounded rule-based scoring, stores optional operational feedback, and exposes the result to both machine and human clients. The design prioritises reproducibility, explicit uncertainty, source attribution, fail-neutral behaviour, and protection against server-side request forgery.
 
-## Why This Exists
+The system is currently at **v0.4.0**: the core API, scoring pipeline, browser-extension surface, dashboard, RDAP integration, OpenPhish cache, optional Google Safe Browsing integration, TLS probe, PostgreSQL/Redis adapters, and CI quality gates are implemented. Regulator data ingestion, large-scale calibration, independent evaluation, and production compliance remain open research and engineering work.
 
-Retail traders are often exposed to fake broker websites, clone domains, aggressive "guaranteed profit" campaigns, and phishing pages that look legitimate. TradeGuard Shield gives users a visible risk badge while browsing and returns evidence-backed explanations through an API.
+## Author and research profile
 
-The project is designed around explainable signals rather than unsupported accusations. Results are phrased as risk levels and supporting evidence, not legal determinations.
+<p align="center">
+  <img src="assets/author/Ciprian-Stefan-Plesca.jpeg" alt="Ciprian Ștefan Pleșca" width="240">
+</p>
 
-## Product Surface
+**Ciprian Ștefan Pleșca** is an independent Romanian researcher and software developer, unaffiliated with an institution and working without dedicated institutional resources. TradeGuard Shield is developed as a self-directed public-interest research project.
 
-- Browser extension with green, yellow, and red badges on visited trading websites.
-- Public API for URL checks, reports, feedback, and aggregate statistics.
-- Dashboard for analysts and operators to review recent checks and reports.
-- Shared scoring package with transparent rule weights.
-- Production-oriented config, security, logging, collector, worker, cache, and persistence boundaries.
-- Docker Compose development environment.
-- CI workflows for API, shared package, dashboard, and extension checks.
+Contact: [contact@agentflow-enterrprise.com](mailto:contact@agentflow-enterrprise.com)
 
-## Repository Layout
+See the full [author and research profile](docs/author.md).
 
-```text
-tradeguard-shield/
-  apps/
-    api/                 Fastify API service
-    dashboard/           React dashboard
-    extension/           Manifest V3 browser extension
-  packages/
-    config/              Environment validation
-    logger/              Redaction-safe log helpers
-    security/            URL safety and security headers
-    shared/              Types, URL normalization, scoring engine
-    testing/             Shared fixtures
-  services/
-    collector/           Signal collection interfaces and timeout handling
-    worker/              Background job primitives
-  assets/                Branding, extension icons, diagrams
-  docs/                  Architecture, API, legal, data-source notes
-  infra/                 Docker and deployment assets
-  .github/workflows/     CI
+## Research questions
+
+1. Can public, explainable signals provide useful early warning without pretending to establish truth about a business?
+2. How should an API behave when an upstream registry or threat feed is slow, unavailable, incomplete, or geographically biased?
+3. Can evidence, uncertainty, feedback, and operational controls be represented in a small system that is auditable by independent reviewers?
+
+## System model
+
+```mermaid
+flowchart LR
+  U[Browser or API client] --> N[URL normalization and SSRF guard]
+  N --> C[Signal collector]
+  C --> R[RDAP]
+  C --> T[Threat feeds]
+  C --> G[Regulator signal]
+  C --> S[TLS probe]
+  C --> A[Content analysis]
+  R --> E[Evidence envelope]
+  T --> E
+  G --> E
+  S --> E
+  A --> E
+  E --> P[Shared scoring policy]
+  P --> O[Score, risk level, badge, reasons]
+  O --> X[API response]
+  O --> D[Dashboard and extension]
+  O --> L[Optional cache and persistence]
 ```
 
-## Risk Levels
+The collector is deliberately fail-neutral: an upstream error yields an unknown or neutral signal rather than a synthetic positive or negative fact. This preserves availability while making uncertainty visible to callers and operators.
 
-- `high`: 0-30, red badge
-- `medium`: 31-60, yellow badge
-- `low`: 61-100, green badge
+## Scoring interpretation
 
-## Quick Start
+The shared package maps bounded signal evidence to a score from 0 to 100 and then to a risk level:
+
+| Score | Level | Badge | Interpretation |
+|---:|---|---|---|
+| 0–30 | high | red | Multiple adverse indicators or a strong threat signal |
+| 31–60 | medium | yellow | Material uncertainty or mixed evidence |
+| 61–100 | low | green | No material adverse signal observed by the configured providers |
+
+“Low risk” means only that the configured checks did not find a material indicator at that time. It is not an endorsement, solvency opinion, or guarantee of safety.
+
+## Signal and evidence pipeline
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant API as Fastify API
+  participant Signals as Signal orchestrator
+  participant RDAP as RDAP registry
+  participant Feeds as OpenPhish / Safe Browsing
+  participant Score as Shared scorer
+
+  Client->>API: GET /api/v1/check?url=...
+  API->>Signals: validate and collect(domain)
+  par bounded external calls
+    Signals->>RDAP: domain lookup (3 s timeout)
+    Signals->>Feeds: threat lookup (3 s timeout; feed cache 15 min)
+  end
+  Signals->>Score: typed evidence with unknowns preserved
+  Score-->>API: score, level, badge, reasons
+  API-->>Client: explainable JSON response
+```
+
+## Quick start
+
+Requirements: Node.js 22.12 or newer, Corepack, and pnpm 9.9.
 
 ```bash
+corepack enable
 pnpm install
 pnpm dev
 ```
 
-API defaults to `http://localhost:8080`. Dashboard defaults to `http://localhost:5173`.
+The API defaults to `http://localhost:8080`; the dashboard defaults to `http://localhost:5173`.
 
-## API Example
+For optional Google Safe Browsing checks, configure the key outside source control:
+
+```bash
+GOOGLE_SAFE_BROWSING_API_KEY=your-key pnpm --filter @tradeguard/api dev
+```
+
+The OpenPhish feed requires no key and is cached locally for at least 15 minutes. All external calls have an explicit maximum timeout of three seconds and degrade to neutral results.
+
+## API example
 
 ```bash
 curl "http://localhost:8080/api/v1/check?url=https://example-broker.com"
@@ -77,58 +123,81 @@ curl "http://localhost:8080/api/v1/check?url=https://example-broker.com"
   "score": 38,
   "riskLevel": "medium",
   "badge": "yellow",
-  "reasons": [
-    {
-      "code": "DOMAIN_YOUNG",
-      "severity": "warning",
-      "detail": "Domain age is below the configured trust threshold."
-    }
-  ],
+  "reasons": [{
+    "code": "DOMAIN_YOUNG",
+    "severity": "warning",
+    "detail": "Domain age is below the configured trust threshold."
+  }],
   "checkedAt": "2026-09-02T10:00:00.000Z",
   "cacheTtlSeconds": 86400
 }
 ```
 
-## Data Sources
+See the [API reference](docs/api.md) and [OpenAPI notes](docs/api/openapi.md).
 
-The API uses real RDAP and threat-feed integrations while keeping neutral fallbacks for unavailable upstreams. Production deployments can add:
+## Repository architecture
 
-- RDAP/WHOIS domain age and registration metadata
-- Certificate Transparency history
-- Google Safe Browsing or equivalent threat feeds
-- PhishTank, OpenPhish, and local blocklists
-- Financial regulators such as FCA, SEC, CySEC, ASIC, and ESMA
-- Review and community feedback sources
+```text
+apps/api/          Fastify HTTP API, orchestration, adapters, signal implementations
+apps/dashboard/    React operator dashboard
+apps/extension/    Manifest V3 browser extension
+packages/shared/   Domain types, URL normalization, scoring policy
+packages/config/   Environment validation and runtime configuration
+services/          Collector and worker boundaries
+docs/              Academic architecture, API, operations, ethics, and author profile
+infra/             Docker and deployment assets
+assets/            Branding, diagrams, and author media supplied by the author
+```
 
-## Monetization Model
+## Integrated sources and limitations
 
-- Free: basic checks, limited rate, current-site browser badge.
-- Pro: detailed reports, watchlists, alerts, historical trend view, faster refresh.
-- Enterprise/API: higher throughput, bulk checks, custom risk policies, audit exports.
+| Source | Current use | Principal limitation |
+|---|---|---|
+| RDAP via `rdap.org` | Registration event and domain-age evidence | Registry coverage and fields vary by TLD; privacy detection is heuristic |
+| OpenPhish public feed | Cached URL/domain threat matching | Public feed coverage and freshness are outside this project’s control |
+| Google Safe Browsing v4 | Optional threat match query | Requires a Google Cloud API key and is subject to Google quotas/terms |
+| TLS endpoint probe | HTTPS reachability and certificate authorisation | Network vantage point and transient outages can affect observations |
+| Regulator mappings | Conservative signal layer | Current coverage is limited; it is not a complete or authoritative global register |
 
-## Legal And Ethical Position
+Read the full [data-source methodology](docs/data-sources.md) before interpreting a result.
 
-TradeGuard Shield provides informational risk scoring. It does not declare a company guilty of fraud and does not replace financial, legal, or regulatory advice. Operators should provide appeal and correction workflows for site owners.
+## Current status and next phase
 
-## Implementation Status
+| Area | Status |
+|---|---|
+| Fastify API and typed contracts | Implemented and tested |
+| Explainable scoring | Implemented; requires external calibration study |
+| RDAP and threat feeds | Implemented with timeout and neutral-failure semantics |
+| TLS probe | Implemented with bounded HTTPS request |
+| Dashboard and extension surfaces | MVP implemented; further UX and deployment hardening remain |
+| PostgreSQL and Redis adapters | Implemented; production backup/observability validation remains |
+| Regulator ingestion | Limited/partial; not a complete global regulator database |
+| Independent accuracy evaluation | Not yet completed |
+| Regulatory/compliance certification | Not claimed |
 
-Implemented:
+The next phase is empirical validation: a documented evaluation set, precision/recall analysis, calibration of thresholds, source-specific coverage audits, disposable database integration tests, and an operational runbook tested under failure conditions. “Complete” for a safety-oriented product means measurable, reviewable operation—not merely that all files compile.
 
-- TypeScript monorepo
-- Fastify API with validation, security headers, request IDs, and SSRF guard
-- Rule-based explainable scoring
-- Manifest V3 extension with real icons and HTTP/HTTPS-only page matching
-- Dashboard MVP
-- Collector/worker interfaces
-- Memory cache and persistence adapters
-- PostgreSQL schema migration draft
-- CI and security workflows
+## Security, privacy, and ethics
 
-Planned before production:
+TradeGuard Shield uses URL validation and SSRF protection, redaction-aware logging, bounded external requests, authenticated production dashboard routes, and explicit neutral fallbacks. Operators must preserve evidence, offer correction/appeal paths, and avoid presenting a risk score as an accusation. See [security](docs/security/ssrf.md), [legal and ethics](docs/legal-and-ethics.md), and [incident response](docs/operations/incident-response.md).
 
-- Authenticated dashboard
-- External data-provider credentials and adapters
-- Full regulator registry ingestion
-- Independent scoring methodology review
-- Disposable PostgreSQL/Redis integration tests and operational backup verification
+## Supporting the research
 
+If you wish to support this independent work, please contact the author at [contact@agentflow-enterrprise.com](mailto:contact@agentflow-enterrprise.com). Donations should be voluntary and transparent; no payment address or financial account is embedded in the repository until the author publishes an official, verifiable donation channel.
+
+## Documentation map
+
+- [Author and research profile](docs/author.md)
+- [Research methodology](docs/research-methodology.md)
+- [Architecture](docs/architecture.md)
+- [API reference](docs/api.md)
+- [Data sources](docs/data-sources.md)
+- [Development](docs/development.md)
+- [Deployment](docs/deployment.md)
+- [Legal and ethics](docs/legal-and-ethics.md)
+- [Arabic project summary](docs/README.ar.md)
+- [Changelog](CHANGELOG.md)
+
+## License and citation
+
+Copyright (c) 2026 Ciprian Ștefan Pleșca. See [LICENSE](LICENSE) and [NOTICE](NOTICE) for the repository terms. For academic or technical reuse, cite the repository and identify the exact release, configuration, data sources, and observation date.
